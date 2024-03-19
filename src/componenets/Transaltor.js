@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FaRegCopy } from "react-icons/fa6";
+import { FaMountainCity, FaRegCopy } from "react-icons/fa6";
 function Translator() {
     const [languages, setLanguages] = useState([]);
+    const [textTranslateFrom, setTextTranslateFrom] = useState('en')
     const [selectedLanguage, setSelectedLanguage] = useState('hi');
     const [textToTranslate, setTextToTranslate] = useState('What can i do for you?');
     const [translatedText, setTranslatedText] = useState("");
@@ -32,7 +33,7 @@ function Translator() {
 
     async function getTranslatedText() {
         const encodedParams = new URLSearchParams();
-        encodedParams.set('source_language', 'en');
+        encodedParams.set('source_language', textTranslateFrom);
         encodedParams.set('target_language', selectedLanguage);
         encodedParams.set('text', textToTranslate );
         
@@ -59,6 +60,9 @@ function Translator() {
     function handleLanguageChange(event) {
         setSelectedLanguage(event.target.value);
     }
+    function handleFromLanguageChange(e){
+        setTextTranslateFrom(e.target.value)
+    }
     function handleTranslation(e){
         setTextToTranslate(e.target.value)
     }
@@ -70,12 +74,20 @@ function Translator() {
         setCopy("copied"); 
         setTimeout(() => {
            setCopy(""); 
-        }, 1000);
+        }, 2000);
     }
     return (
         <div className='container'>
             <div className='main'>
             <div className='input-area'> 
+            <label>Translate From:</label>
+            <select value={textTranslateFrom} onChange={handleFromLanguageChange}>
+                {
+                    languages.map((item, index)=>{
+                        return <option key={index} value={item.code} >{item.name}</option>;
+                    })
+                }
+            </select>
             <textarea onChange={handleTranslation} value={textToTranslate}></textarea>
             <label>Translate to:</label>
             <select value={selectedLanguage} onChange={handleLanguageChange}>
